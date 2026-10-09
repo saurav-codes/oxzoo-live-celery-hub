@@ -1,0 +1,25 @@
+# Django (start, install) is detected; declaring [build] commands drops the
+# detected collectstatic, so it is listed again. This file adds the
+# second database's migrate, the worker and beat, and the four services.
+[app]
+health = "/_zoo/health"
+
+[build]
+commands = [
+  "uv run python manage.py collectstatic --noinput",
+  "uv run python -c 'import zoo; zoo.write_build_info(\"build-info.json\")'",
+]
+migrate  = "uv run python manage.py migrate --noinput && uv run python manage.py migrate --noinput --database ledger"
+
+# A 4 GB host: two task processes for the worker, caps on both (measured
+# about 235 MB for the worker tree and 85 MB for beat). The venv binary
+# directly, so no uv process sits in the cgroup.
+[workers]
+worker = { run = "exec .venv/bin/celery -A hub worker --concurrency 2 --loglevel INFO --without-mingle", memory = "384M" }
+beat   = { run = "exec .venv/bin/celery -A hub beat --loglevel INFO --schedule \"$OX_DATA_DIR/celerybeat-schedule\"", memory = "160M" }
+
+[services]
+postgres = {}
+ledger   = { type = "postgres", only_for_this_project = true }
+redis    = {}
+cache    = { type = "redis", only_for_this_project = false }

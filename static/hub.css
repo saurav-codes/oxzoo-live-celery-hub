@@ -1,0 +1,5 @@
+body { font: 14px/1.45 system-ui, sans-serif; color: #2b2b2b; margin: 2rem auto; max-width: 980px; padding: 0 1rem; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 1.5rem; }
+th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #eee; }
+section { border: 1px solid #e5e5e5; border-radius: 14px; padding: 6px 16px 10px; margin-bottom: 1rem; }
+.ok, .SUCCESS { color: #1a7f37; } .bad, .FAILURE, .RETRY { color: #c62828; } .subtle { color: #777; }

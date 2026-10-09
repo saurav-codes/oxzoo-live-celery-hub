@@ -1,0 +1,44 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="15">
+<title>{{ name }}</title>
+<link rel="stylesheet" href="{% static 'hub.css' %}">
+</head>
+<body>
+<h1>{{ name }}</h1>
+<p class="subtle">Celery workers, recent task runs and the beat schedule. Refreshes every 15 s.
+  JSON: <a href="/api/status">/api/status</a>, <a href="/_zoo/probe">/_zoo/probe</a></p>
+
+<section>
+  <h2>Workers</h2>
+  {% if workers.ok %}
+    {% for w in workers.data %}<p class="ok">{{ w.name }}: {{ w.reply }}</p>
+    {% empty %}<p class="bad">No worker answered the ping within 1 s.</p>{% endfor %}
+  {% else %}<p class="bad">{{ workers.error }}</p>{% endif %}
+</section>
+
+<section>
+  <h2>Beat</h2>
+  {% if not beat.ok %}<p class="bad">{{ beat.error }}</p>
+  {% elif beat.data %}<p class="{% if beat.data.age_s > 150 %}bad{% else %}ok{% endif %}">Last tick {{ beat.data.last_tick }}, {{ beat.data.age_s }} s ago. {{ beat.data.ticks_24h }} ticks in the last day.</p>
+  {% else %}<p class="bad">No beat tick recorded yet.</p>{% endif %}
+  <p class="subtle">Ledger rows (private database): {% if ledger.ok %}{{ ledger.data }}{% else %}{{ ledger.error }}{% endif %}</p>
+</section>
+
+<section>
+  <h2>Recent task runs</h2>
+  {% if runs.ok %}
+  <table>
+    <tr><th>Task</th><th>State</th><th>Worker</th><th>Started</th><th>Took</th><th>Result</th></tr>
+    {% for r in runs.data %}
+    <tr><td>{{ r.name }}</td><td class="{{ r.state }}">{{ r.state }}</td><td>{{ r.worker }}</td><td>{{ r.started_at }}</td>
+      <td>{% if r.ms is not None %}{{ r.ms }} ms{% endif %}</td><td>{{ r.detail }}</td></tr>
+    {% empty %}<tr><td colspan="6" class="subtle">no runs yet</td></tr>{% endfor %}
+  </table>
+  {% else %}<p class="bad">{{ runs.error }}</p>{% endif %}
+</section>
+</body>
+</html>
