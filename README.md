@@ -1,6 +1,10 @@
 # celery-hub
 
-> **Role in the zoo:** project `celery-hub` of [oxzoo-live](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/README.md#projects), deployed with ox on server s1 at https://celery-hub.s1.zoo.sorv.dev. The contract it follows is [DESIGN.md](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/DESIGN.md).
+Deployed with [ox](https://deploywithox.com): deploy a repo to your own server with one command, no Docker. [Docs](https://deploywithox.com/docs) · [Guide for this stack](https://deploywithox.com/docs/guides/django)
+
+**Live demo:** https://celery-hub.s1.zoo.sorv.dev
+
+> **Role in the zoo:** project `celery-hub` of [oxzoo-live](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/README.md#projects), deployed with [ox](https://deploywithox.com) on server s1 at https://celery-hub.s1.zoo.sorv.dev. The contract it follows is [DESIGN.md](https://github.com/saurav-codes/oxzoo-live-control/blob/main/zoo/DESIGN.md).
 
 Django 5 + gunicorn with a Celery worker and Celery beat as ox workers, two
 Postgres databases and two Redis instances. It starts the `event-river`
